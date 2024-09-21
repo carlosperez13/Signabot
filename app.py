@@ -64,7 +64,10 @@ logging.info("Modelo cargado.")
 print("Modelo cargado.")
 
 # Conectar a MongoDB
-client = MongoClient('mongodb+srv://carlosperez0390:cheetos3@signabot.qd4ab.mongodb.net/?retryWrites=true&w=majority&appName=Signabot')
+client = MongoClient('mongodb+srv://carlosperez0390:cheetos3@signabot.qd4ab.mongodb.net/?retryWrites=true&w=majority&appName=Signabot',
+                    serverSelectionTimeoutMS=5000,  
+    socketTimeoutMS=5000 
+    )
 db = client['sign_language_db']
 users_collection = db['users']
 predictions_collection = db['predictions']
