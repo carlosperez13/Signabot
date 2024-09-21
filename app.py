@@ -23,7 +23,7 @@ logging.basicConfig(level=logging.INFO)
 
 # Configuración de Flask y JWT
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "http://signab0t.s3-website-us-east-1.amazonaws.com"}})
 
 app.config['JWT_SECRET_KEY'] = 'cheeetos3'  # Cambia esto por una clave secreta
 app.config['SECRET_KEY'] = 'cheetos3'  # Necesario para la protección CSRF
