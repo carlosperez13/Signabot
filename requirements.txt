@@ -11,3 +11,4 @@ tensorflow
 pyttsx3
 gunicorn
 pyserial
+boto3
