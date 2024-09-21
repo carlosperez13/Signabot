@@ -1,0 +1,12 @@
+Flask
+Werkzeug
+PyJWT
+Flask-JWT-Extended
+Flask-WTF
+pymongo
+flask-cors
+opencv-python
+numpy
+tensorflow
+pyttsx3
+gunicorn
