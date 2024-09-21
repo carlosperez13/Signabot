@@ -9,6 +9,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from flask_wtf.csrf import CSRFProtect
 from werkzeug.utils import secure_filename
 import os
+import boto3
 import cv2
 import numpy as np
 import tensorflow as tf
@@ -35,9 +36,30 @@ csrf = CSRFProtect(app)
 def hash_email(email):
     return hashlib.sha256(email.encode()).hexdigest()
 
-# Configuración del modelo
-model_path = 'https://archbackend.s3.amazonaws.com/gesture_recognition_model.h5'
-model = tf.keras.models.load_model(model_path)
+# Nombre de tu bucket de S3 y el archivo a descargar
+bucket_name = 'archbackend'
+model_file_key = 'gesture_recognition_model.h5'
+
+# Ruta local donde guardarás el archivo descargado temporalmente
+local_model_path = '/tmp/gesture_recognition_model.h5'
+
+# Crear un cliente S3 usando boto3
+s3 = boto3.client('s3')
+
+# Descargar el archivo desde S3
+def download_model_from_s3():
+    if not os.path.exists(local_model_path):
+        print(f"Descargando {model_file_key} desde S3...")
+        s3.download_file(bucket_name, model_file_key, local_model_path)
+        print("Descarga completa.")
+    else:
+        print("El modelo ya está descargado.")
+
+# Llamar la función para descargar el modelo
+download_model_from_s3()
+
+# Cargar el modelo en TensorFlow
+model = tf.keras.models.load_model(local_model_path)
 logging.info("Modelo cargado.")
 print("Modelo cargado.")
 
