@@ -12,3 +12,4 @@ pyttsx3
 gunicorn
 pyserial
 boto3
+pip install --upgrade pymongo
