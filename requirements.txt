@@ -10,3 +10,4 @@ numpy
 tensorflow
 pyttsx3
 gunicorn
+pyserial
