@@ -107,6 +107,15 @@ def log_access( action):
     }
     access_logs_collection.insert_one(log_entry)
     logging.info(f"Acceso registrado: Acción: {action}")
+    
+def log_access(user_id, action):
+    log_entry = {
+        'user_id': user_id,  # Agrega el user_id al registro
+        'action': action,
+        'timestamp': time.time()
+    }
+    access_logs_collection.insert_one(log_entry)
+    logging.info(f"Acceso registrado: Usuario: {user_id}, Acción: {action}")
 
 def log_suspicious_activity(user_id, action):
     log_entry = {
@@ -190,7 +199,7 @@ def login():
         if check_password_hash(user['password'], password):
             logging.info("Contraseña correcta")
             access_token = create_access_token(identity={"username": user['username'], "role": user.get('role', '')})
-            log_access(user['_id'], 'login')
+            log_access_login(user['_id'], 'login')
             return jsonify(access_token=access_token, role=user.get('role', ''))
         else:
             logging.warning("Contraseña incorrecta")
