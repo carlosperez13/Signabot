@@ -99,14 +99,14 @@ img_size = 224
 labels = ['A', 'B', 'C','D','E','F','G','H','I']  
 
 # Funciones de registro de accesos y monitoreo de actividad sospechosa
-def log_access(user_id, action):
+def log_access( action):
     log_entry = {
-        'user_id': user_id,
+       
         'action': action,
         'timestamp': time.time()
     }
     access_logs_collection.insert_one(log_entry)
-    logging.info(f"Acceso registrado: Usuario {user_id}, Acción: {action}")
+    logging.info(f"Acceso registrado: Acción: {action}")
 
 def log_suspicious_activity(user_id, action):
     log_entry = {
@@ -213,7 +213,7 @@ def logout():
 @csrf.exempt  # Si deseas desactivar CSRF para esta ruta específica
 def predict():
     start_time = time.time()
-    user_id = get_jwt_identity()
+    
 
     logging.info("Solicitud de predicción recibida.")
 
@@ -247,7 +247,7 @@ def predict():
     }
     predictions_collection.insert_one(prediction_record)
 
-    log_access(user_id, 'predict')
+    log_access( 'predict')
 
     # Conversión de texto a voz
     engine = pyttsx3.init()
