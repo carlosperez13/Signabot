@@ -224,7 +224,6 @@ def logout():
 def predict():
     start_time = time.time()
     
-
     logging.info("Solicitud de predicción recibida.")
 
     if 'image' not in request.files:
@@ -247,8 +246,9 @@ def predict():
         'confidence': f"{confidence}%",
         'processing_time': time.time() - start_time
     }
-   del image, processed_image  # Libera variables grandes
+    del img  # Libera la variable grande
     gc.collect()  # Fuerza la recolección de basura
+
     # Guardar en MongoDB
     prediction_record = {
         'filename': filename,
@@ -258,7 +258,7 @@ def predict():
     }
     predictions_collection.insert_one(prediction_record)
 
-    log_access( 'predict')
+    log_access('predict')
 
     # Conversión de texto a voz
     engine = pyttsx3.init()
@@ -268,6 +268,7 @@ def predict():
     logging.info(f"Predicción realizada: {predicted_label} con {confidence}% de confianza.")
 
     return jsonify(response)
+
 
 @app.route('/predict_camera', methods=['POST'])
 @jwt_required()
