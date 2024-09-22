@@ -19,9 +19,14 @@ import hashlib
 import pyttsx3
 import tempfile
 import gc
-
+import psutil
 # Configuración del logging
 logging.basicConfig(level=logging.INFO)
+
+def log_memory_usage():
+    process = psutil.Process()  # Obtén el proceso actual
+    mem_info = process.memory_info()  # Información de memoria
+    logging.info(f"Uso de memoria: {mem_info.rss / 1024 ** 2:.2f} MB")  # RSS en MB
 
 # Configuración de Flask y JWT
 app = Flask(__name__)
@@ -223,7 +228,7 @@ def logout():
 @csrf.exempt  # Si deseas desactivar CSRF para esta ruta específica
 def predict():
     start_time = time.time()
-    
+     log_memory_usage()
     logging.info("Solicitud de predicción recibida.")
 
     if 'image' not in request.files:
