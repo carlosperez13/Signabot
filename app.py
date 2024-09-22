@@ -108,7 +108,7 @@ def log_access( action):
     access_logs_collection.insert_one(log_entry)
     logging.info(f"Acceso registrado: Acción: {action}")
     
-def log_access(user_id, action):
+def log_access_login(user_id, action):
     log_entry = {
         'user_id': user_id,  # Agrega el user_id al registro
         'action': action,
