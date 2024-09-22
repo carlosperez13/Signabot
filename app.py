@@ -210,7 +210,6 @@ def logout():
     return jsonify({"msg": "Sesión cerrada"}), 200
 
 @app.route('/predict', methods=['POST'])
-@jwt_required()
 @csrf.exempt  # Si deseas desactivar CSRF para esta ruta específica
 def predict():
     start_time = time.time()
