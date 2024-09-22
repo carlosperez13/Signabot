@@ -12,4 +12,4 @@ pyttsx3
 gunicorn
 pyserial
 boto3
-gc
+
