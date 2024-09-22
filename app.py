@@ -17,6 +17,7 @@ from werkzeug.exceptions import BadRequest
 from datetime import timedelta
 import hashlib
 import pyttsx3
+import tempfile
 
 # Configuración del logging
 logging.basicConfig(level=logging.INFO)
@@ -219,9 +220,9 @@ def predict():
     if 'image' not in request.files:
         return jsonify({'error': 'No image uploaded'}), 400
     file = request.files['image']
-    filename = secure_filename(file.filename)
-    image_path = os.path.join('C:/Users/eduar/OneDrive/Documentos/backend/images', filename)
-    file.save(image_path)
+    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+        image_path = temp_file.name
+        file.save(image_path)
 
     logging.info("Preprocesando la imagen...")
     img = preprocess_image(image_path)
