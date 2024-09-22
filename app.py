@@ -228,7 +228,7 @@ def logout():
 @csrf.exempt  # Si deseas desactivar CSRF para esta ruta específica
 def predict():
     start_time = time.time()
-     log_memory_usage()
+    log_memory_usage()
     logging.info("Solicitud de predicción recibida.")
 
     if 'image' not in request.files:
