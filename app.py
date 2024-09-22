@@ -18,6 +18,7 @@ from datetime import timedelta
 import hashlib
 import pyttsx3
 import tempfile
+import gc
 
 # Configuración del logging
 logging.basicConfig(level=logging.INFO)
@@ -246,7 +247,8 @@ def predict():
         'confidence': f"{confidence}%",
         'processing_time': time.time() - start_time
     }
-
+   del image, processed_image  # Libera variables grandes
+    gc.collect()  # Fuerza la recolección de basura
     # Guardar en MongoDB
     prediction_record = {
         'filename': filename,
