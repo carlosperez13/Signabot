@@ -5,9 +5,9 @@ Flask-JWT-Extended
 Flask-WTF
 pymongo
 flask-cors
-opencv-python
 numpy
-tensorflow
+tensorflow-cpu
+opencv-python-headless
 pyttsx3
 gunicorn
 pyserial
