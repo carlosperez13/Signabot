@@ -18,7 +18,22 @@ import pyttsx3
 import tempfile
 import gc
 import psutil
+import requests
 
+def download_file_from_github(url, local_path):
+    response = requests.get(url)
+    if response.status_code == 200:
+        with open(local_path, 'wb') as f:
+            f.write(response.content)
+        print("Archivo descargado correctamente.")
+    else:
+        print(f"Error al descargar el archivo: {response.status_code}")
+
+# URL directa del archivo en GitHub
+url = "https://raw.githubusercontent.com/carlosperez13/modelo/c9e0d407e517d2b5e058b0705d6ee68124441823/gesture_recognition_model.h5"
+local_path = "gesture_recognition_model.h5"
+
+download_file_from_github(url, local_path)
 # Configuración del logging
 logging.basicConfig(level=logging.INFO)
 
@@ -42,22 +57,6 @@ csrf = CSRFProtect(app)
 def hash_email(email):
     return hashlib.sha256(email.encode()).hexdigest()
 
-# Configuración de S3
-bucket_name = 'archbackend'
-model_file_key = 'gesture_recognition_model.h5'
-local_model_path = '/tmp/gesture_recognition_model.h5'
-s3 = boto3.client('s3')
-
-# Descargar el modelo desde S3
-def download_model_from_s3():
-    if not os.path.exists(local_model_path):
-        logging.info(f"Descargando {model_file_key} desde S3...")
-        s3.download_file(bucket_name, model_file_key, local_model_path)
-        logging.info("Descarga completa.")
-
-download_model_from_s3()
-model = tf.keras.models.load_model(local_model_path)
-logging.info("Modelo cargado.")
 
 # Conectar a MongoDB
 client = MongoClient('mongodb+srv://carlosperez0390:cheetos3@signabot.qd4ab.mongodb.net/?retryWrites=true&w=majority&appName=Signabot',
@@ -71,7 +70,7 @@ suspicious_activity_collection = db['suspicious_activity']
 logging.info("Conectado a MongoDB.")
 
 # Configuración del puerto serial para la mano robótica
-serial_port = 'COM6'
+serial_port = 'COM9'
 baud_rate = 9600
 
 # Intento de conexión al puerto serial
@@ -254,11 +253,25 @@ def predict_camera():
 
     log_access('predict_camera')
 
-    # Enviar comando a la mano robótica
-    send_to_robot(predicted_label)
-
     logging.info(f"Predicción realizada: {predicted_label} con {confidence}% de confianza.")
     return jsonify(response)
+    
+@app.route('/send_to_robot', methods=['POST'])
+@csrf.exempt
+def send_to_robot_route():
+    data = request.get_json()
+    letter = data.get('letter', '')
+    
+    if letter:
+        try:
+            send_to_robot(letter)
+            return jsonify({'success': True, 'message': f'Letra {letter} enviada a la mano robótica.'}), 200
+        except Exception as e:
+            logging.error(f"Error al enviar la letra a la mano robótica: {e}")
+            print(f"Error al enviar la letra a la mano robótica: {e}")
+            return jsonify({'success': False, 'message': 'Error al enviar la letra a la mano robótica.'}), 500
+    else:
+        return jsonify({'success': False, 'message': 'No se recibió ninguna letra.'}), 400
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
