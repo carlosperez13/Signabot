@@ -29,7 +29,7 @@ def log_memory_usage():
 
 # Configuración de Flask y JWT
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "http://signab0t.s3-website-us-east-1.amazonaws.com"}}, allow_headers=["Authorization", "Content-Type"])
+CORS(app, resources={r"/*": {"origins": "https://enchanting-sherbet-1b2e15.netlify.app"}}, allow_headers=["Authorization", "Content-Type"])
 
 app.config['JWT_SECRET_KEY'] = 'cheeetos3'  
 app.config['SECRET_KEY'] = 'cheetos3'  
