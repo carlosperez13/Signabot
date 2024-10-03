@@ -34,6 +34,8 @@ url = "https://raw.githubusercontent.com/carlosperez13/modelo/c9e0d407e517d2b5e0
 local_path = "gesture_recognition_model.h5"
 
 download_file_from_github(url, local_path)
+model = tf.keras.models.load_model(local_path)
+
 # Configuración del logging
 logging.basicConfig(level=logging.INFO)
 
